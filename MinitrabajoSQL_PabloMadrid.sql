@@ -1,12 +1,9 @@
--- create_stremaing_musical.sql
--- (tip: usa utf8mb4 para emojis y caracteres especiales)
-
 
 CREATE DATABASE streaming_musical;
 
 USE streaming_musical;
 
--- 1) USUARIOS
+-- 1. USUARIOS
 CREATE TABLE usuarios (
   usuario_id       INT AUTO_INCREMENT PRIMARY KEY,
   nombre           VARCHAR(100) NOT NULL,
@@ -17,7 +14,7 @@ CREATE TABLE usuarios (
   INDEX idx_usuarios_fecha (fecha_registro)
 ) ENGINE=InnoDB;
 
--- 2) PLANES
+-- 2. PLANES
 CREATE TABLE planes (
   plan_id     INT AUTO_INCREMENT PRIMARY KEY,
   nombre      VARCHAR(80) NOT NULL UNIQUE,
@@ -25,7 +22,7 @@ CREATE TABLE planes (
   descripcion TEXT NULL
 ) ENGINE=InnoDB;
 
--- 3) SUSCRIPCIONES (histórico)
+-- 3. SUSCRIPCIONES (histórico)
 CREATE TABLE suscripciones (
   suscripcion_id  INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id      INT NOT NULL,
@@ -46,7 +43,7 @@ CREATE TABLE suscripciones (
   INDEX idx_susc_fin (fecha_fin)
 ) ENGINE=InnoDB;
 
--- 4) ARTISTAS
+-- 4. ARTISTAS
 CREATE TABLE artistas (
   artista_id        INT AUTO_INCREMENT PRIMARY KEY,
   nombre            VARCHAR(120) NOT NULL,
@@ -56,7 +53,7 @@ CREATE TABLE artistas (
   INDEX idx_artistas_genero (genero_principal)
 ) ENGINE=InnoDB;
 
--- 5) ALBUMES
+-- 5. ALBUMES
 CREATE TABLE albumes (
   album_id          INT AUTO_INCREMENT PRIMARY KEY,
   artista_id        INT NOT NULL,
@@ -71,7 +68,7 @@ CREATE TABLE albumes (
   INDEX idx_albumes_genero (genero)
 ) ENGINE=InnoDB;
 
--- 6) CANCIONES
+-- 6. CANCIONES
 CREATE TABLE canciones (
   cancion_id          INT AUTO_INCREMENT PRIMARY KEY,
   album_id            INT NOT NULL,
@@ -86,7 +83,7 @@ CREATE TABLE canciones (
   INDEX idx_canciones_numrep (num_reproducciones)
 ) ENGINE=InnoDB;
 
--- 7) PLAYLISTS
+-- 7. PLAYLISTS
 CREATE TABLE playlists (
   playlist_id    INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id     INT NOT NULL,
@@ -99,7 +96,7 @@ CREATE TABLE playlists (
   INDEX idx_playlists_fecha (fecha_creacion)
 ) ENGINE=InnoDB;
 
--- 8) PLAYLIST_CANCION (N:M)
+-- 8. PLAYLIST_CANCION (N:M)
 CREATE TABLE playlist_cancion (
   playlist_id     INT NOT NULL,
   cancion_id      INT NOT NULL,
@@ -114,7 +111,7 @@ CREATE TABLE playlist_cancion (
   INDEX idx_pc_fecha (fecha_agregado)
 ) ENGINE=InnoDB;
 
--- 9) HISTORIAL_REPRODUCCION
+-- 9. HISTORIAL_REPRODUCCION
 CREATE TABLE historial_reproduccion (
   historial_id       BIGINT AUTO_INCREMENT PRIMARY KEY,
   usuario_id         INT NOT NULL,
@@ -131,7 +128,7 @@ CREATE TABLE historial_reproduccion (
   INDEX idx_hist_fecha (fecha_reproduccion)
 ) ENGINE=InnoDB;
 
--- 10) LIKES
+-- 10. LIKES
 CREATE TABLE likes (
   like_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
   usuario_id  INT NOT NULL,
@@ -150,18 +147,16 @@ CREATE TABLE likes (
 
 USE streaming_musical;
 
--- ========================
--- 1) PLANES
--- ========================
+
+-- 1. PLANES
 INSERT INTO planes (nombre, precio, descripcion) VALUES
 ('Free', 0.00, 'Acceso limitado con anuncios'),
 ('Premium Individual', 9.99, 'Acceso ilimitado para un usuario'),
 ('Familiar', 14.99, 'Hasta 6 cuentas premium'),
 ('Estudiante', 4.99, 'Descuento especial para estudiantes');
 
--- ========================
--- 2) USUARIOS
--- ========================
+
+-- 2. USUARIOS
 INSERT INTO usuarios (nombre, email, pais, fecha_registro) VALUES
 ('Ana López','ana@gmail.com','España','2023-01-12'),
 ('Carlos Pérez','carlos@gmail.com','México','2023-02-05'),
@@ -179,9 +174,8 @@ INSERT INTO usuarios (nombre, email, pais, fecha_registro) VALUES
 ('Javier Alonso','javier@gmail.com','Argentina','2023-08-03'),
 ('Fernanda Silva','fer@gmail.com','México','2023-08-12');
 
--- ========================
--- 3) SUSCRIPCIONES
--- ========================
+
+-- 3. SUSCRIPCIONES
 INSERT INTO suscripciones (usuario_id, plan_id, fecha_inicio, fecha_fin, estado) VALUES
 (1,2,'2023-01-12','2024-01-11','activa'),
 (2,1,'2023-02-05',NULL,'activa'),
@@ -199,9 +193,8 @@ INSERT INTO suscripciones (usuario_id, plan_id, fecha_inicio, fecha_fin, estado)
 (14,4,'2023-08-03','2024-08-02','activa'),
 (15,1,'2023-08-12',NULL,'activa');
 
--- ========================
--- 4) ARTISTAS
--- ========================
+
+-- 4. ARTISTAS
 INSERT INTO artistas (nombre, pais, genero_principal) VALUES
 ('Shakira','Colombia','Pop'),
 ('Bad Bunny','Puerto Rico','Reggaetón'),
@@ -214,9 +207,7 @@ INSERT INTO artistas (nombre, pais, genero_principal) VALUES
 ('Karol G','Colombia','Reggaetón'),
 ('Arctic Monkeys','Reino Unido','Indie');
 
--- ========================
--- 5) ALBUMES
--- ========================
+-- 5. ALBUMES
 INSERT INTO albumes (artista_id, titulo, fecha_lanzamiento, genero) VALUES
 (1,'Oral Fixation','2005-11-29','Pop'),
 (2,'YHLQMDLG','2020-02-29','Reggaetón'),
@@ -229,9 +220,8 @@ INSERT INTO albumes (artista_id, titulo, fecha_lanzamiento, genero) VALUES
 (9,'KG0516','2021-03-26','Reggaetón'),
 (10,'AM','2013-09-09','Indie');
 
--- ========================
--- 6) CANCIONES
--- ========================
+
+-- 6. CANCIONES
 INSERT INTO canciones (album_id, titulo, duracion_seg, num_reproducciones) VALUES
 (1,'Hips Don’t Lie',220,1500),
 (1,'La Tortura',200,1200),
@@ -249,9 +239,8 @@ INSERT INTO canciones (album_id, titulo, duracion_seg, num_reproducciones) VALUE
 (10,'Do I Wanna Know?',240,2600),
 (10,'R U Mine?',250,900);
 
--- ========================
--- 7) PLAYLISTS
--- ========================
+
+-- 7. PLAYLISTS
 INSERT INTO playlists (usuario_id, nombre, fecha_creacion) VALUES
 (1,'Favoritos Ana','2023-01-20'),
 (2,'Mix Carlos','2023-02-10'),
@@ -269,9 +258,7 @@ INSERT INTO playlists (usuario_id, nombre, fecha_creacion) VALUES
 (14,'Top Javier','2023-08-05'),
 (15,'Lo mejor de Fer','2023-08-15');
 
--- ========================
--- 8) PLAYLIST_CANCION
--- ========================
+-- 8. PLAYLIST_CANCION
 INSERT INTO playlist_cancion (playlist_id, cancion_id, fecha_agregado) VALUES
 (1,1,'2023-01-20 10:00:00'),
 (1,3,'2023-01-20 10:05:00'),
@@ -289,9 +276,8 @@ INSERT INTO playlist_cancion (playlist_id, cancion_id, fecha_agregado) VALUES
 (11,12,'2023-07-12 08:00:00'),
 (12,2,'2023-07-20 17:00:00');
 
--- ========================
--- 9) HISTORIAL_REPRODUCCION
--- ========================
+
+-- 9. HISTORIAL_REPRODUCCION
 INSERT INTO historial_reproduccion (usuario_id, cancion_id, fecha_reproduccion) VALUES
 (1,1,'2023-08-01 10:00:00'),
 (1,3,'2023-08-01 10:05:00'),
@@ -309,9 +295,8 @@ INSERT INTO historial_reproduccion (usuario_id, cancion_id, fecha_reproduccion) 
 (13,6,'2023-08-13 22:00:00'),
 (14,15,'2023-08-14 23:00:00');
 
--- ========================
--- 10) LIKES
--- ========================
+
+-- 10. LIKES
 INSERT INTO likes (usuario_id, cancion_id, fecha_like) VALUES
 (1,1,'2023-08-01 10:10:00'),
 (2,4,'2023-08-02 11:10:00'),
